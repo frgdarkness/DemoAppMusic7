@@ -128,21 +128,14 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="17dp"
-        android:layout_above="@id/seekBarSong">
+        android:layout_above="@id/seekBarSong"
+        >
 
         <ImageView
             android:id="@+id/imageViewCover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:srcCompat="@drawable/ashes_pic_png" />
-
-        <android.support.v7.widget.RecyclerView
-            android:background="#000"
-            android:id="@+id/recycleViewSong"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
 

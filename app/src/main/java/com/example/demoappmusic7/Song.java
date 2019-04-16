@@ -5,12 +5,14 @@ public class Song {
     private String artist;
     private int file;
     private int cover;
+    private int lyric;
 
-    public Song(String title, String artist, int file, int cover) {
+    public Song(String title, String artist, int file, int cover, int lyric) {
         this.title = title;
         this.artist = artist;
         this.file = file;
         this.cover = cover;
+        this.lyric = lyric;
     }
 
     public String getTitle() {
@@ -43,5 +45,13 @@ public class Song {
 
     public void setCover(int cover) {
         this.cover = cover;
+    }
+
+    public int getLyric() {
+        return lyric;
+    }
+
+    public void setLyric(int lyric) {
+        this.lyric = lyric;
     }
 }

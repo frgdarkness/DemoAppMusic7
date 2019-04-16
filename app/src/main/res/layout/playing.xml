@@ -17,6 +17,7 @@
             android:id="@+id/imageViewCoverMain"
             android:layout_width="65dp"
             android:layout_height="65dp"
+            android:layout_marginTop="3dp"
             android:src="@drawable/ashes_pic_png" />
 
         <TextView
@@ -166,18 +167,22 @@
         android:layout_height="wrap_content" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/textSongTitle"
-        android:layout_marginBottom="15dp">
+        android:id="@+id/relativeCover"
+        android:layout_width="600dp"
+        android:layout_height="600dp"
+        android:layout_below="@+id/relative1"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/ashes_pic_png">
 
-        <ImageView
-            android:id="@+id/imageViewCover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ashes_pic_png" />
+        <ListView
+            android:background="@drawable/perfect_pic_png"
+            android:backgroundTint="@color/colorTintCover1"
 
+            android:id="@+id/listViewLyric"
 
+            android:layout_width="600dp"
+            android:layout_height="600dp"></ListView>
     </RelativeLayout>
 
 
