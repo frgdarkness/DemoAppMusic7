@@ -11,6 +11,7 @@
         android:id="@+id/relative1"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:layout_marginBottom="0dp"
         android:background="#0C0A0A">
 
         <ImageView
@@ -168,11 +169,13 @@
 
     <RelativeLayout
         android:id="@+id/relativeCover"
-        android:layout_width="600dp"
-        android:layout_height="600dp"
-        android:layout_below="@+id/relative1"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_above="@id/seekBarSong"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="70dp"
+
         android:background="@drawable/ashes_pic_png">
 
         <ListView
@@ -181,8 +184,42 @@
 
             android:id="@+id/listViewLyric"
 
-            android:layout_width="600dp"
-            android:layout_height="600dp"></ListView>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ListView>
+
+        <RelativeLayout
+            android:background="@drawable/ashes_pic_png"
+            android:backgroundTint="@color/colorTintCover1"
+            android:id="@+id/relativeWave"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.gauravk.audiovisualizer.visualizer.BarVisualizer xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:backgroundTint="@color/colorTintCover1"
+                android:id="@+id/bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"
+                custom:avColor="#D3D300"
+                custom:avDensity="0.2"
+                custom:avSpeed="normal"
+                custom:avType="outline"
+                custom:avWidth="20dp" />
+
+            <com.gauravk.audiovisualizer.visualizer.WaveVisualizer
+                android:id="@+id/wave"
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                custom:avDensity="0.2"
+                custom:avSpeed="normal"
+                custom:avType="fill"
+                custom:avColor="@color/av_light_blue" />
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
 

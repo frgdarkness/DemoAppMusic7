@@ -56,8 +56,10 @@ public class LyricAdapter extends BaseAdapter {
 
         if(listRowLyric.get(position).isCheckShow()){
             viewHolder.txtRow.setTextColor(Color.RED);
+            viewHolder.txtRow.setTextSize(30);
         }else{
             viewHolder.txtRow.setTextColor(Color.WHITE);
+            viewHolder.txtRow.setTextSize(24);
         }
         RowLyric row = listRowLyric.get(position);
         viewHolder.txtRow.setText(row.getStringCau());

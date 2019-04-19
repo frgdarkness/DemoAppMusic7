@@ -18,6 +18,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
+import com.gauravk.audiovisualizer.visualizer.WaveVisualizer;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
@@ -30,24 +32,29 @@ public class MainActivity extends AppCompatActivity {
     private SlidingUpPanelLayout mLayout;
     TextView txtTitle, txtArtist, txtTimeSong, txtTimeTotal,txtTitleMain,txtArtTistMain;
     ImageButton btnNext, btnPrev, btnPlay, btnRepeat, btnRandom, btnQueue,btnPlayMain;
-    ImageView imgViewCover,imgViewCoverMain;
+    ImageView imgViewCover,imgViewCoverMain,imgTint;
     ListView listViewLyric;
     ArrayList<Song> listSong;
     SeekBar sbSong;
     MediaPlayer media;
     ViewPager viewPager;
     PagerAdapter2 adapter;
-    RelativeLayout relative1,relative2,relativeCover;
+    RelativeLayout relative1,relative2,relativeCover,relativeWave;
+    BarVisualizer barVisual;
+    WaveVisualizer waveVisualizer;
     List<RowLyric> rowLyricList;
     List<Integer> timeLyricList;
     List<String> lyricList;
     LyricAdapter lyricAdapter;
+    int sessionID;
     int position =0;
     int ktQueue = 0;
     int ktPlaySong = 0;
     int checkRepeat = 1;        // 1: ko lap - 2: lap tat ca - 3: lap 1 bai
     int checkRandom = 1;        // 1: ko random - 2: random
     int tintCover = 0;
+    int checkCoverView = 1;
+    int checkWave=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         creatMedia();
         btnPlayMain.setImageResource(R.drawable.ic_play_main);
         btnPlay.setImageResource(R.drawable.ic_play2);
+        listViewLyric.setVisibility(View.INVISIBLE);
+        relativeWave.setVisibility(View.INVISIBLE);
+        waveVisualizer.setVisibility(View.INVISIBLE);
         //media.start();
         //relative2.setVisibility(View.INVISIBLE);
 
@@ -145,15 +155,28 @@ public class MainActivity extends AppCompatActivity {
         btnQueue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listViewLyric.getVisibility()==View.VISIBLE) {
-                    listViewLyric.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getApplicationContext(),"invisible",Toast.LENGTH_SHORT).show();
+                if(checkCoverView==3)
+                    checkCoverView=1;
+                else checkCoverView++;
+                switch (checkCoverView){
+                    case 1:
+                        listViewLyric.setVisibility(View.INVISIBLE);
+                        relativeWave.setVisibility(View.INVISIBLE);
+                        //checkCoverView=2;
+                        break;
+                    case 2:
+                        listViewLyric.setVisibility(View.VISIBLE);
+                        relativeWave.setVisibility(View.INVISIBLE);
+                        //checkCoverView=3;
+                        break;
+                    case 3:
 
+                        listViewLyric.setVisibility(View.INVISIBLE);
+                        relativeWave.setVisibility(View.VISIBLE);
+                        //checkCoverView=1;
+                        break;
                 }
-                else {
-                    listViewLyric.setVisibility(View.VISIBLE);
-                    Toast.makeText(getApplicationContext(),"visible",Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
 
@@ -211,6 +234,34 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, ""+media.getCurrentPosition(),Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
+        barVisual.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                barVisual.release();
+                if(sessionID!=-1)
+                    waveVisualizer.setAudioSessionId(sessionID);
+                barVisual.setVisibility(View.INVISIBLE);
+                waveVisualizer.setVisibility(View.VISIBLE);
+                checkWave=2;
+                return false;
+            }
+        });
+
+        waveVisualizer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                waveVisualizer.release();
+                if(sessionID!=-1)
+                    barVisual.setAudioSessionId(sessionID);
+                waveVisualizer.setVisibility(View.INVISIBLE);
+                barVisual.setVisibility(View.VISIBLE);
+                checkWave=1;
+                return false;
+            }
+        });
     }
 
     public void anhXa(){
@@ -234,6 +285,9 @@ public class MainActivity extends AppCompatActivity {
         //relative2 = (RelativeLayout) findViewById(R.id.relative2);
         relativeCover = (RelativeLayout) findViewById(R.id.relativeCover);
         listViewLyric = (ListView) findViewById(R.id.listViewLyric);
+        barVisual = (BarVisualizer) findViewById(R.id.bar);
+        waveVisualizer = (WaveVisualizer) findViewById(R.id.wave);
+        relativeWave = (RelativeLayout) findViewById(R.id.relativeWave);
     }
 
     @Override
@@ -257,11 +311,19 @@ public class MainActivity extends AppCompatActivity {
         txtTitleMain.setText(listSong.get(position).getTitle());
         txtArtTistMain.setText(listSong.get(position).getArtist());
         imgViewCoverMain.setImageResource(listSong.get(position).getCover());
+        relativeWave.setBackgroundResource(listSong.get(position).getCover());
         setTimeTotal();
         updateTimeSong();
         btnPlay.setImageResource(R.drawable.ic_pause2);
         btnPlayMain.setImageResource(R.drawable.ic_pause_main);
         addDataLyric();
+        sessionID = media.getAudioSessionId();
+        if(sessionID!=-1){
+            if(checkWave==1)
+                barVisual.setAudioSessionId(sessionID);
+            else
+                waveVisualizer.setAudioSessionId(sessionID);
+        }
     }
 
     public void creatMedia(int pos){
@@ -273,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
         txtArtist.setText(listSong.get(pos).getArtist());
         //imgViewCover.setImageResource(listSong.get(pos).getCover());
         relativeCover.setBackgroundResource(listSong.get(pos).getCover());
+        relativeWave.setBackgroundResource(listSong.get(position).getCover());
         txtTitleMain.setText(listSong.get(pos).getTitle());
         txtArtTistMain.setText(listSong.get(pos).getArtist());
         imgViewCoverMain.setImageResource(listSong.get(pos).getCover());
@@ -282,6 +345,13 @@ public class MainActivity extends AppCompatActivity {
         btnPlay.setImageResource(R.drawable.ic_pause2);
         btnPlayMain.setImageResource(R.drawable.ic_pause_main);
         addDataLyric();
+        sessionID = media.getAudioSessionId();
+        if(sessionID!=-1){
+            if(checkWave==1)
+                barVisual.setAudioSessionId(sessionID);
+            else
+                waveVisualizer.setAudioSessionId(sessionID);
+        }
     }
 
     public void nextSong(){
@@ -330,8 +400,8 @@ public class MainActivity extends AppCompatActivity {
                 sbSong.setProgress(media.getCurrentPosition());
                 //ktra bai hat ket thuc -> tiep tuc phat bai tiep theo
 
-                for(int i=0; i<timeLyricList.size(); i++){
 
+                for(int i=0; i<timeLyricList.size(); i++){
                     if(timeLyricList.get(i)>=(media.getCurrentPosition()/1000) && timeLyricList.get(i)<(media.getCurrentPosition()/1000)+2 ){
                         RowLyric r1 = rowLyricList.get(i);
                         if(i>0){
